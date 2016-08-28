@@ -23,8 +23,8 @@ app.set('views', path.join(__dirname, 'views'));//设置模板存放目录
 app.set('view engine', 'html');//设置模板引擎
 app.engine('html',require('ejs').__express);//设置渲染函数
 
-var accessStream = fs.createWriteStream("../access.log")
-app.use(logger("dev",{stream:accessStream}));//如果指定了stream,把日志打印到可写流里
+// var accessStream = fs.createWriteStream("../access.log")
+// app.use(logger("dev",{stream:accessStream}));//如果指定了stream,把日志打印到可写流里
 // uncomment after placing your favicon in /public
 // 在你将收藏夹图标放置在/public目录下之后就可以取消掉此注释了
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -84,11 +84,11 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-var errorStream = fs.createWriteStream("./error.log");
+//var errorStream = fs.createWriteStream("./error.log");
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     console.error(err);//把错误输出到控制台
-    errorStream.write(err.toString());
+   // errorStream.write(err.toString());
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
