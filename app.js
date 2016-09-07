@@ -47,6 +47,7 @@ app.use(session({
     url:settings.dbUrl //指定了session的存储位置
   })
 }));
+
 //放在session之后，放在读取flash之前
 app.use(flash());
 //用来将flash消息赋给模板数据对象
@@ -65,7 +66,6 @@ app.use(function(req,res,next){
 });
 //静态文件中间件 根目录是public目录,所以在页面中引用静态文件的时候必须以public目录作为根目录
 app.use(express.static(path.join(__dirname, 'public')));
-
 //当路径是/开头的话交由routes处理
 app.use('/', routes);
 //当路径/users开头的话交由users

@@ -15,6 +15,7 @@ function readFile(filename) {
         });
     });
 }
+
 //promise的链式调用 在于在回调里返回一个新的promise
 readFile('1.txt')
 .then(function (data) {//2.txt
@@ -26,6 +27,7 @@ readFile('1.txt')
 .then(function (data) {//3
     console.log(data);
 })
+    
 //不管这个链条中有任何一个环节出错了，就会调用catch方法
 .catch(function(error){
     console.log(error);

@@ -15,7 +15,7 @@ exports.mustLogin = function (req, res, next) {
     if (req.session.user) {
         next();
     } else {
-        req.flash('error', '此页面需要登陆后才能访问，你尚未登录，请登陆');
+        req.flash('error', '此页面需要登陆后才能访问');
         res.redirect('/user/login');
     }
 }

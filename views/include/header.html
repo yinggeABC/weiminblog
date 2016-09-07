@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>珠峰博客</title>
+    <title>莺歌的博客</title>
     <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body>
 <nav class="navbar navbar-inverse">
@@ -13,7 +14,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">珠峰博客</a>
+            <a class="navbar-brand" href="/">我的博客</a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
@@ -37,6 +38,7 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%=user.username%> <span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        <li><a href="/user/setting">设置</a></li>
                         <li><a href="/user/logout">退出</a></li>
                     </ul>
                 </li>
@@ -49,9 +51,16 @@
 </nav>
 <div class="container">
     <%if(success){%>
-    <div class="alert alert-success" role="alert"><%=success%></div>
+    <div class="alert alert-success alert-dismissable" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+            ×
+        </button>
+        <%=success%>
+    </div>
     <%}%>
 
     <%if(error){%>
-    <div class="alert alert-danger" role="alert"><%=error%></div>
+    <div class="alert alert-warning" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+        <%=error%></div>
     <%}%>

@@ -46,7 +46,7 @@ router.post('/reg',auth.mustNotLogin, function(req, res, next) {
 });
 //不是完整的路径，而是/users后面的路径
 //用户登陆
-router.get('/login',auth.mustNotLogin, function(req, res, next) {
+router.get('/login', function(req, res, next) {
   res.render('user/login');
 });
 //处理提交登录功能
