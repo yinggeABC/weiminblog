@@ -10,6 +10,7 @@ router.get('/reg',auth.mustNotLogin,function(req, res, next) {
 });
 //提交用户注册表单
 router.post('/reg',auth.mustNotLogin, function(req, res, next) {
+  console.log(req.body)
   var user = req.body;//user password repassword email
   //如果密码和重复密码不一致，则返回重定向到上一个注册表单页面
   if(user.password != user.repassword){
@@ -74,6 +75,19 @@ router.post('/login',auth.mustNotLogin, function(req, res, next) {
       }
   });
 });
+router.get("/setting",function(req,res){
+  res.render("user/setting",{user:req.session.user});
+})
+
+router.post("/setting",function(req,res){
+  var user  = req.body;
+  if (user.password == req.session.user.password){
+    req.flash("error","新密码和旧密码冲突");
+  }else{
+    req.flash("success","密码修改成功");
+  //  Model("User",)更新数据库
+  }
+})
 //必须登陆以后才能退出
 router.get('/logout',auth.mustLogin,function(req,res){
    req.session.user = null;

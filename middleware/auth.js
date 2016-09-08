@@ -3,7 +3,7 @@
 exports.mustNotLogin = function (req, res, next) {
     //如果req.session.user有值， 则认为此用户已经登录
     if (req.session.user) {
-        req.flash('error', '此页面需要未登陆才能访问，你已经登录过了');
+        req.flash('error', '此页面需要未登陆才能访问，你已经登录过了');//写入flash
         res.redirect('/');
     } else {
         next();
