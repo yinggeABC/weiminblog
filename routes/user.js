@@ -2,7 +2,7 @@ var express = require('express');
 var utils = require('../utils');
 var auth = require('../middleware/auth');
 var multer = require("multer");
-var upload = multer({dest:"../public/uploads/",fileSize:1024*1024*1024});
+var upload = multer({dest:"../public/uploads/"});
 //创建一个路由容器
 var router = express.Router();
 //用户注册
@@ -88,19 +88,23 @@ router.post("/setting",upload.single("avatar"),function(req,res){
             req.flash("error","新密码和旧密码冲突");
         }else{
             req.flash("success","密码修改成功");
+          console.log("old",req.session.user.password)
+          console.log("new",nPassword)
+
             Model("User").update({username:req.session.user.username},{$set:{password:nPassword}},function(err){
                 if (err){
                     req.flash("error","密码保存失败");
                 }else{
-                    req.session.user.password=nPassword;
+                   Model("User").findOne({username:req.session.user.username},function(err,doc){
+                     req.session.user=doc;
+                   })
                     req.flash("success","密码修改成功");
                 }
-                res.redirect("back");
             })
         }
     }
     if(req.file){
-        user.avatar = "uploads"+req.file.filename;
+        user.avatar = "/uploads/"+req.file.filename;
         Model("User").update({username:req.session.user.username},{$set:{avatar:user.avatar}},function(err){
             if (err){
                 req.flash("error","图片上传失败");
@@ -108,9 +112,9 @@ router.post("/setting",upload.single("avatar"),function(req,res){
                 req.session.user.avatar=user.avatar;
                 req.flash("success","头像上传成功");
             }
-            res.redirect("back");
         })
     }
+  res.redirect("back")
 })
 //必须登陆以后才能退出
 router.get('/logout',auth.mustLogin,function(req,res){
