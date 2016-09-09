@@ -1,6 +1,8 @@
 var express = require('express');
 var utils = require('../utils');
 var auth = require('../middleware/auth');
+var multer = require("multer");
+var upload = multer({dest:"../public/uploads/",fileSize:1024*1024*1024});
 //创建一个路由容器
 var router = express.Router();
 //用户注册
@@ -10,7 +12,6 @@ router.get('/reg',auth.mustNotLogin,function(req, res, next) {
 });
 //提交用户注册表单
 router.post('/reg',auth.mustNotLogin, function(req, res, next) {
-  console.log(req.body)
   var user = req.body;//user password repassword email
   //如果密码和重复密码不一致，则返回重定向到上一个注册表单页面
   if(user.password != user.repassword){
@@ -79,14 +80,37 @@ router.get("/setting",function(req,res){
   res.render("user/setting",{user:req.session.user});
 })
 
-router.post("/setting",function(req,res){
+router.post("/setting",upload.single("avatar"),function(req,res){
   var user  = req.body;
-  if (user.password == req.session.user.password){
-    req.flash("error","新密码和旧密码冲突");
-  }else{
-    req.flash("success","密码修改成功");
-  //  Model("User",)更新数据库
-  }
+    if (user.password){
+        var nPassword = utils.md5(user.password);
+        if (nPassword == req.session.user.password){
+            req.flash("error","新密码和旧密码冲突");
+        }else{
+            req.flash("success","密码修改成功");
+            Model("User").update({username:req.session.user.username},{$set:{password:nPassword}},function(err){
+                if (err){
+                    req.flash("error","密码保存失败");
+                }else{
+                    req.session.user.password=nPassword;
+                    req.flash("success","密码修改成功");
+                }
+                res.redirect("back");
+            })
+        }
+    }
+    if(req.file){
+        user.avatar = "uploads"+req.file.filename;
+        Model("User").update({username:req.session.user.username},{$set:{avatar:user.avatar}},function(err){
+            if (err){
+                req.flash("error","图片上传失败");
+            }else{
+                req.session.user.avatar=user.avatar;
+                req.flash("success","头像上传成功");
+            }
+            res.redirect("back");
+        })
+    }
 })
 //必须登陆以后才能退出
 router.get('/logout',auth.mustLogin,function(req,res){

@@ -1,11 +1,15 @@
 <%include ../include/header.html%>
 <div class="container">
+    <form action="/user/setting" method="post" role="form" enctype="multipart/form-data">
         <div class="panel panel-default col-xs-offset-2 col-xs-8" style="padding:0">
             <div class="panel-heading">
                 上传头像
             </div>
             <div class="panel-body">
-
+                <div class="form-group">
+                    <label for="avatar" class="control-label" name="avatar">从本地选择头像</label>
+                    <input type="file" id="avatar" class="form-control"/>
+                </div>
             </div>
         </div>
         <div class="panel panel-default col-xs-offset-2 col-xs-8" style="padding:0">
@@ -13,7 +17,7 @@
                 修改密码
             </div>
             <div class="panel-body">
-                <form action="/user/setting" method="post" role="form">
+
                     <div class="form-group">
                         <label for="nPassword" class="control-label">新密码</label>
                         <input type="password" name="password" class="form-control" id="nPassword">
@@ -23,8 +27,9 @@
                        <input type="password" name="confirm" class="form-control" id="rePassword">
                    </div>
                     <input type="submit" class="btn btn-default" value="保存修改">
-                </form>
+
             </div>
         </div>
+    </form>
 </div>
 <%include ../include/footer.html%>
