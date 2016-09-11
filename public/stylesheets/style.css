@@ -1,6 +1,7 @@
 body {
   padding: 0;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background:rgba(217,237,247,0.12) url("../test1.png") fixed 1000px 500px no-repeat;
 }
 
 a {
