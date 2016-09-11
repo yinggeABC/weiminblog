@@ -2,7 +2,22 @@ var express = require('express');
 var utils = require('../utils');
 var auth = require('../middleware/auth');
 var multer = require("multer");
-var upload = multer({dest:"../public/uploads/"});
+var path= require("path");
+var npath = path.join(__dirname,"../public/uploads/");
+var storage = multer.diskStorage({
+    destination:function(req,file,cb){
+        cb(null,npath);
+    },
+    filename:function(req,file,cb){
+        cb(null,file.originalname);
+    }
+});
+var upload = multer({storage:storage,
+limits:{
+    fileSize:8000
+}
+});
+
 //创建一个路由容器
 var router = express.Router();
 //用户注册
@@ -11,7 +26,7 @@ router.get('/reg',auth.mustNotLogin,function(req, res, next) {
   res.render('user/reg');
 });
 //提交用户注册表单
-router.post('/reg',auth.mustNotLogin, function(req, res, next) {
+router.post('/reg',function(req, res, next) {
   var user = req.body;//user password repassword email
   //如果密码和重复密码不一致，则返回重定向到上一个注册表单页面
   if(user.password != user.repassword){
@@ -19,7 +34,7 @@ router.post('/reg',auth.mustNotLogin, function(req, res, next) {
   }
   Model('User').findOne({username:user.username},function(err,result){
     if(result){
-      req.flash('error','很抱歉,你的用户名已经被人占用，注册失败');
+      req.flash('error','很抱歉,你的用户名已经被人占用');
       //如果失败则滚回到上个页面重新填写
       return res.redirect('back');
     }else{
@@ -52,7 +67,7 @@ router.get('/login', function(req, res, next) {
   res.render('user/login');
 });
 //处理提交登录功能
-router.post('/login',auth.mustNotLogin, function(req, res, next) {
+router.post('/login',function(req, res, next) {
   var user = req.body;//先获取请求体 user ={username,password}
   Model('User').findOne({username:user.username},function(err,doc){
       if(err){
@@ -78,53 +93,59 @@ router.post('/login',auth.mustNotLogin, function(req, res, next) {
 });
 router.get("/setting",function(req,res){
   res.render("user/setting",{user:req.session.user});
-})
+});
 
-router.post("/setting",upload.single("avatar"),function(req,res){
-  var user  = req.body;
-    if (user.password){
-        var nPassword = utils.md5(user.password);
-        if (nPassword == req.session.user.password){
-            req.flash("error","新密码和旧密码冲突");
-        }else{
-            req.flash("success","密码修改成功");
-          console.log("old",req.session.user.password)
-          console.log("new",nPassword)
-
-            Model("User").update({username:req.session.user.username},{$set:{password:nPassword}},function(err){
-                if (err){
-                    req.flash("error","密码保存失败");
-                }else{
-                   Model("User").findOne({username:req.session.user.username},function(err,doc){
-                     req.session.user=doc;
-                   })
-                    req.flash("success","密码修改成功");
-                }
-            })
-        }
-    }
-    if(req.file){
-        user.avatar = "/uploads/"+req.file.filename;
-        Model("User").update({username:req.session.user.username},{$set:{avatar:user.avatar}},function(err){
-            if (err){
-                req.flash("error","图片上传失败");
+var midUpload = upload.single("avatar");
+router.post("/setting",function(req,res) {
+    midUpload(req,res,function(err) {
+            if (err) {
+                req.flash("error","上传图片太大,请重新上传");
+                res.redirect("back");
+                return;
             }else{
-                req.session.user.avatar=user.avatar;
-                req.flash("success","头像上传成功");
+                var user  = req.body;
+                if (user.password){
+                    var nPassword = utils.md5(user.password);
+                    if (nPassword == req.session.user.password){
+                        req.flash("error","新密码和旧密码冲突");
+                    }else{
+                        req.flash("success","密码修改成功");
+                        Model("User").update({username:req.session.user.username},{$set:{password:nPassword}},function(err){
+                            if (err){
+                                req.flash("error","密码保存失败");
+                            }else{
+                                Model("User").findOne({username:req.session.user.username},function(err,doc){
+                                    req.session.user=doc;
+                                })
+                                req.flash("success","密码修改成功");
+                            }
+                        })
+                    }
+                }
+                if(req.file){
+                    user.avatar = path.join(req.headers.host,"./uploads/"+req.file.filename);
+                    user.avatar = "http://"+user.avatar;
+                    Model("User").update({username:req.session.user.username},{$set:{avatar:user.avatar}},function(err){
+                        if (err){
+                            req.flash("error","图片上传失败");
+                        }else{
+                            req.session.user.avatar = user.avatar;
+                            console.log(req.session.user.avatar)
+                            req.flash("success","头像上传成功");
+                        }
+                    })
+                }
+                
+                res.redirect("/")
             }
-        })
-    }
-  res.redirect("back")
-})
+        }
+        );
+    })
 //必须登陆以后才能退出
-router.get('/logout',auth.mustLogin,function(req,res){
+router.get('/logout',function(req,res){
    req.session.user = null;
    res.redirect('/');
 })
 
-//用户退出
-router.get('/logout', function(req, res, next) {
-  res.send('退出');
-});
 
 module.exports = router;
