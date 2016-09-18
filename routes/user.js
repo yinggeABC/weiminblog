@@ -116,6 +116,7 @@ router.post("/setting",function(req,res) {
                             }else{
                                 Model("User").findOne({username:req.session.user.username},function(err,doc){
                                     req.session.user=doc;
+                                    req.session.save();
                                 })
                                 req.flash("success","密码修改成功");
                             }
@@ -130,12 +131,11 @@ router.post("/setting",function(req,res) {
                             req.flash("error","图片上传失败");
                         }else{
                             req.session.user.avatar = user.avatar;
-                            console.log(req.session.user.avatar)
+                            req.session.save();//由于修改了session,需要调用这个方法来使session的修改立即生效，无需用户退出重新登录
                             req.flash("success","头像上传成功");
                         }
                     })
                 }
-                
                 res.redirect("/")
             }
         }
