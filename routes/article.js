@@ -1,6 +1,7 @@
 var express = require('express');
 var auth = require('../middleware/auth');
 var markdown = require('markdown').markdown;
+var multer = require("multer");
 //创建一个路由容器
 var router = express.Router();
 //文章列表路由

@@ -3,13 +3,13 @@ var utils = require('../utils');
 var auth = require('../middleware/auth');
 var multer = require("multer");
 var path= require("path");
-var npath = path.join(__dirname,"../public/uploads/");
+var npath = path.join(__dirname,"../public/avatar/");
 var storage = multer.diskStorage({
     destination:function(req,file,cb){
         cb(null,npath);
     },
     filename:function(req,file,cb){
-        cb(null,file.originalname);
+        cb(null,Date.now()+file.originalname);
     }
 });
 var upload = multer({storage:storage,
@@ -95,7 +95,7 @@ router.get("/setting",function(req,res){
   res.render("user/setting",{user:req.session.user});
 });
 
-var midUpload = upload.single("avatar");
+var midUpload = upload.single("avatar");//single里的参数是file表单的name值，single函数完成图片上传
 router.post("/setting",function(req,res) {
     midUpload(req,res,function(err) {
             if (err) {
@@ -124,7 +124,7 @@ router.post("/setting",function(req,res) {
                     }
                 }
                 if(req.file){
-                    user.avatar = path.join(req.headers.host,"./uploads/"+req.file.filename);
+                    user.avatar = path.join(req.headers.host,"./avatar/"+req.file.filename);
                     user.avatar = "http://"+user.avatar;
                     Model("User").update({username:req.session.user.username},{$set:{avatar:user.avatar}},function(err){
                         if (err){

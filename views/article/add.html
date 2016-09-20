@@ -1,5 +1,6 @@
 <%-include ../include/header.html%>
-<form action="/article/add" method="post" class="form-horizontal">
+<form action="/article/add" method="post" class="form-horizontal" enctype="multipart/form-data">
+    <!--form的enctype为multipart/form-data表示该表单提交的内容有多种类型，在使用包含文件上传的表单时，使用这个值-->
     <input type="hidden" name="_id" value="<%=article._id%>">
     <div class="form-group">
         <label class="control-label col-xs-3" for="title">标题</label>
@@ -14,6 +15,10 @@
             <div class="input-group-addon"><span class="glyphicon glyphicon-list-alt"></span></div>
             <textarea class="form-control" name="content" id="content" cols="30" rows="10"><%=article.content%></textarea>
         </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-3">上传图片</label>
+        <input type="file" id="file" name="file">
     </div>
     <div class="col-xs-offset-3">
         <input class="btn btn-primary" type="submit" value="发表">
