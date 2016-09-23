@@ -1,94 +1,132 @@
 <%include ../include/header.html%>
 <div class="container container-nospace">
-    <div class="col-xs-offset-1 col-xs-3 panel panel-primary panel-adj">
+    <div class="col-xs-3 panel panel-primary panel-adj">
         <div class="h4 text-center panel-heading panel-heading-adj">
             页面设置
         </div>
-        <div class="panel-body panel-body-adj">
-            <form role="form" class="form-horizontal">
-                <div class="form-group">
-                    <label class="control-label">每页文章数量</label>
-                    <select class="form-control" onchange="goto(<%=pageNum%>)" class="form-control" name="pageSize" id="pageSize">
-                        <options>
-                            <option <%=pageSize == 5?'selected':''%>  value="5">5</option>
-                            <option <%=pageSize == 10?'selected':''%>  value="10">10</option>
-                            <option <%=pageSize == 15?'selected':''%>  value="15">15</option>
-                            <option <%=pageSize == 20?'selected':''%>  value="20">20</option>
-                        </options>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="control-label">文章排序</label>
-                    <select  onchange="goto(<%=pageNum%>)" class="form-control" name="order" id="order">
-                        <options>
-                            <option <%=order == '-createAt'?'selected':''%>  value="-createAt">按发表时间降序</option>
-                            <option <%=order == 'createAt'?'selected':''%> value="createAt">按发表时间升序</option>
-                            <option <%=order == '-title'?'selected':''%> value="-title">按标题降序</option>
-                            <option <%=order == 'title'?'selected':''%> value="title">按标题升序</option>
-                        </options>
-                    </select>
-                </div>
-            </form>
-        </div>
-    </div>
-
-
-<div class="col-xs-offset-1 col-xs-7">
-    <%articles.forEach(function(article){%>
-    <div class="media">
-        <div class="media-left">
-            <a href="/article/list?user=<%=article.user._id%>">
-                <img class="media-object" src="<%=article.user.avatar%>" alt="<%=article.user.username%>" style="height:28px;width:28px;">
-            </a>
-        </div>
-        <div class="media-body">
-            <h4 class="media-heading">
-                <a href="/article/detail/<%=article._id%>" class="linkText"><%=article.title%></a>
-            </h4>
-            <div class="contentArea">
-                <%-article.content%>
+        <div class="panel-body">
+            <div class="panel-body-adj">
+                <form role="form" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label">每页文章数量</label>
+                        <select class="form-control" onchange="goto(<%=pageNum%>)" class="form-control" name="pageSize"
+                                id="pageSize">
+                            <options>
+                                <option
+                                <%=pageSize == 5?'selected':''%> value="5">5</option>
+                                <option
+                                <%=pageSize == 10?'selected':''%> value="10">10</option>
+                                <option
+                                <%=pageSize == 15?'selected':''%> value="15">15</option>
+                                <option
+                                <%=pageSize == 20?'selected':''%> value="20">20</option>
+                            </options>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">文章排序</label>
+                        <select onchange="goto(<%=pageNum%>)" class="form-control" name="order" id="order">
+                            <options>
+                                <option
+                                <%=order == '-createAt'?'selected':''%> value="-createAt">按发表时间降序</option>
+                                <option
+                                <%=order == 'createAt'?'selected':''%> value="createAt">按发表时间升序</option>
+                                <option
+                                <%=order == '-title'?'selected':''%> value="-title">按标题降序</option>
+                                <option
+                                <%=order == 'title'?'selected':''%> value="title">按标题升序</option>
+                            </options>
+                        </select>
+                    </div>
+                </form>
             </div>
-            <p>访问量:<%=article.pv%> | 评论数:<%=article.comments.length%> |作者:<%=article.user.username%> | 发表时间:<%=article.createAt.toLocaleString()%></p>
+            <div class="datePicker"></div>
         </div>
+
     </div>
-    <%});%>
-    <nav>
-        <ul class="pagination">
-            <%
-            if(pageNum>1){%>
-            <li>
-                <a href="#"  onclick="goto(<%=pageNum-1%>)" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <%}
-            %>
 
-            <%
-            for(var i=1;i<=totalPages;i++){%>
-            <li class="<%=pageNum==i?'active':''%>"><a href="#"  onchange="goto(<%=i%>)"><%=i%></a></li>
-            <%}
-            %>
-            <%
-            if(pageNum<totalPages){%>
-            <li>
-                <a  onclick="goto(<%=pageNum+1%>)" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            <%}
-            %>
 
-        </ul>
-    </nav>
-</div>
+    <div class="col-xs-offset-1 col-xs-7">
+        <%articles.forEach(function(article){%>
+        <div class="media">
+            <div class="media-left">
+                <a href="/article/list?user=<%=article.user._id%>">
+                    <img class="media-object" src="<%=article.user.avatar%>" alt="<%=article.user.username%>"
+                         style="height:28px;width:28px;">
+                </a>
+            </div>
+            <div class="article media-body">
+                <h4 class="media-heading">
+                    <a href="/article/detail/<%=article._id%>" class="linkText"><%=article.title%></a>
+                </h4>
+                <div class="contentArea">
+                    <%-article.content%>
+                </div>
+                <p>访问量:<%=article.pv%> | 评论数:<%=article.comments.length%> |作者:<%=article.user.username%> |
+                    发表时间:<%=article.createAt.toLocaleString()%></p>
+            </div>
+        </div>
+        <%});%>
+        <nav>
+            <ul class="pagination">
+                <%
+                if(pageNum>1){%>
+                <li>
+                    <a href="#" onclick="goto(<%=pageNum-1%>)" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <%}
+                %>
+
+                <%
+                for(var i=1;i<=totalPages;i++){%>
+                <li class="<%=pageNum==i?'active':''%>"><a href="#" onclick="goto(<%=i%>)"><%=i%></a></li>
+                <%}
+                %>
+                <%
+                if(pageNum
+                <totalPages
+                ){%>
+                <li>
+                    <a onclick="goto(<%=pageNum+1%>)" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                <%}
+                %>
+
+            </ul>
+        </nav>
+    </div>
 
 </div>
 
 <script>
-    //转到第几页
+    $(function(){
+        $(".datePicker").datepicker({
+            showYear:true,
+            showMonth:true,
+            showButtonPanel:true
+        })
+        $(".datePicker").datepicker("option", $.datepicker.regional["zh-CN"]);
+        //转到第几页
+        function goto(pageNum) {
+            //article/list?pageNum=<%=i%>&pageSize=<%=pageSize%>&keyword=<%=keyword%>
+            //选择的每页的条数
+            var pageSize = document.querySelector('#pageSize').value;
+            //排序字段
+            var order = document.querySelector('#order').value;
+            //取得关键字
+            var keyword = document.querySelector('#keyword').value;
+            var url = '/article/list?pageNum=' + pageNum + '&pageSize=' + pageSize + '&keyword=' + keyword + '&order=' + order;
+            window.location.href = url;
+        }
+    })
+
     function goto(pageNum){
-       //article/list?pageNum=<%=i%>&pageSize=<%=pageSize%>&keyword=<%=keyword%>
+        console.log(pageNum)
+        //article/list?pageNum=<%=i%>&pageSize=<%=pageSize%>&keyword=<%=keyword%>
         //选择的每页的条数
         var pageSize = document.querySelector('#pageSize').value;
         //排序字段

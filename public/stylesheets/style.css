@@ -24,6 +24,7 @@ a {
   margin-left:0;
 }
 .panel-adj{
+  margin-left:0.5em;
   padding:0;
   border-color:#ccc;
 }
@@ -35,6 +36,16 @@ a {
 }
 .panel-primary>.panel-heading-adj,.active{
   background:#7ba5ce;
+}
+.article.media-body{
+  border-bottom:1px dashed #ccc;
+}
+.ui-state-default, .ui-widget-content .ui-state-default{
+  color:#7b89ce;
+}
+.pagination > .active > a{
+  background:#7ba5ce;
+  border-color:#7ba5ce;
 }
 
 
