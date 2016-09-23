@@ -31,12 +31,12 @@
             <div class="media">
                 <div class="media-left">
                     <a href="#">
-                        <img class="media-object" src="<%=comment.user.avatar%>">
+                        <img style="height:28px;width:28px" class="media-object" src="<%=comment.user.avatar%>">
                     </a>
                 </div>
                 <div class="media-body">
                     <p><%-comment.content%></p>
-                    <p>作者:<%=comment.user.username%>|发表时间:<%=comment.createAt.toLocaleString()%></p>
+                    <p>评论人:<%=comment.user.username%>|发表时间:<%=comment.createAt.toLocaleString()%></p>
                 </div>
             </div>
           <%});

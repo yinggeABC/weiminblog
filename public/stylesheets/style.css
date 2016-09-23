@@ -20,5 +20,24 @@ a {
 .linkText{
   text-decoration:underline;
 }
+.container-nospace{
+  margin-left:0;
+}
+.panel-adj{
+  padding:0;
+  border-color:#ccc;
+}
+.panel-heading-adj{
+  margin:0;
+}
+.panel-body-adj{
+  margin:0 15px;
+}
+.panel-primary>.panel-heading-adj,.active{
+  background:#7ba5ce;
+}
+
+
+
 
 

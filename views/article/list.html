@@ -1,5 +1,39 @@
 <%include ../include/header.html%>
-<div class="container">
+<div class="container container-nospace">
+    <div class="col-xs-offset-1 col-xs-3 panel panel-primary panel-adj">
+        <div class="h4 text-center panel-heading panel-heading-adj">
+            页面设置
+        </div>
+        <div class="panel-body panel-body-adj">
+            <form role="form" class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label">每页文章数量</label>
+                    <select class="form-control" onchange="goto(<%=pageNum%>)" class="form-control" name="pageSize" id="pageSize">
+                        <options>
+                            <option <%=pageSize == 5?'selected':''%>  value="5">5</option>
+                            <option <%=pageSize == 10?'selected':''%>  value="10">10</option>
+                            <option <%=pageSize == 15?'selected':''%>  value="15">15</option>
+                            <option <%=pageSize == 20?'selected':''%>  value="20">20</option>
+                        </options>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">文章排序</label>
+                    <select  onchange="goto(<%=pageNum%>)" class="form-control" name="order" id="order">
+                        <options>
+                            <option <%=order == '-createAt'?'selected':''%>  value="-createAt">按发表时间降序</option>
+                            <option <%=order == 'createAt'?'selected':''%> value="createAt">按发表时间升序</option>
+                            <option <%=order == '-title'?'selected':''%> value="-title">按标题降序</option>
+                            <option <%=order == 'title'?'selected':''%> value="title">按标题升序</option>
+                        </options>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+<div class="col-xs-offset-1 col-xs-7">
     <%articles.forEach(function(article){%>
     <div class="media">
         <div class="media-left">
@@ -18,32 +52,6 @@
         </div>
     </div>
     <%});%>
-
-    <nav>
-        <ul class="pagination">
-            <li>每页的条数
-                <select onchange="goto(<%=pageNum%>)" class="form-control" name="pageSize" id="pageSize">
-                    <options>
-                        <option <%=pageSize == 5?'selected':''%>  value="5">5</option>
-                        <option <%=pageSize == 10?'selected':''%>  value="10">10</option>
-                        <option <%=pageSize == 15?'selected':''%>  value="15">15</option>
-                        <option <%=pageSize == 20?'selected':''%>  value="20">20</option>
-                    </options>
-                </select>
-            </li>
-            <li>排序字段
-                <select  onchange="goto(<%=pageNum%>)" class="form-control" name="order" id="order">
-                    <options>
-                        <option <%=order == '-createAt'?'selected':''%>  value="-createAt">按发表时间降序</option>
-                        <option <%=order == 'createAt'?'selected':''%> value="createAt">按发表时间升序</option>
-                        <option <%=order == '-title'?'selected':''%> value="-title">按标题降序</option>
-                        <option <%=order == 'title'?'selected':''%> value="title">按标题升序</option>
-                    </options>
-                </select>
-            </li>
-        </ul>
-    </nav>
-
     <nav>
         <ul class="pagination">
             <%
@@ -73,6 +81,8 @@
 
         </ul>
     </nav>
+</div>
+
 </div>
 
 <script>
