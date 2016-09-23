@@ -54,7 +54,7 @@ router.post('/reg',function(req, res, next) {
           //如果保存成功了，则把保存后的文档对象写入当前的session中
           req.session.user  = doc;
           //重定向到首页
-          return res.redirect('/');
+          return res.redirect('/article/list');
         }
       });
     }
@@ -79,7 +79,7 @@ router.post('/login',function(req, res, next) {
           if(doc.password == utils.md5(user.password)){
             req.session.user  = doc;
             //重定向到首页
-            return res.redirect('/');
+            return res.redirect('/article/list');
           }else{
             req.flash('error','密码输入错误,请重新输入');
             res.redirect('back');
@@ -136,7 +136,7 @@ router.post("/setting",function(req,res) {
                         }
                     })
                 }
-                res.redirect("/")
+                res.redirect("/article/list")
             }
         }
         );

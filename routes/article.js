@@ -1,7 +1,21 @@
 var express = require('express');
 var auth = require('../middleware/auth');
+var path = require("path");
 var markdown = require('markdown').markdown;
 var multer = require("multer");
+var npath = path.join(__dirname,"../public/uploads");
+var storage = multer.diskStorage({
+    destination:function(req,file,cb){
+        cb(null,npath)
+    },
+    filename:function(req,file,cb){
+        cb(null,Date.now()+file.originalname)
+    }
+})
+
+var upload = multer({
+    storage:storage
+})
 //创建一个路由容器
 var router = express.Router();
 //文章列表路由
@@ -16,7 +30,7 @@ router.get('/list', auth.mustLogin, function (req, res) {
      */
     var pageNum = parseInt(req.query.pageNum || 1); //当前的页码
     var pageSize = parseInt(req.query.pageSize || 3);//每页的条数
-    var order = req.query.order;
+    var order = req.query.order||'';
     //如果有用户ID的话查询此用户的所有的文章
     if (user)
         query['user'] = user;
@@ -32,11 +46,10 @@ router.get('/list', auth.mustLogin, function (req, res) {
         var orderValue = 1;//默认排序顺序 1
         if(order.startsWith('-')){//表示倒序排列
             orderValue = -1;//表示要倒序
-            order = order.slice(1);//去掉-之后就成为真正排序字段名称了
+           order = order.slice(1);//去掉-之后就成为真正排序字段名称了
         }
         defaultOrder[order] = orderValue;
     }
-    console.log(defaultOrder);
     var count;
     Model('Article')
         .count(query)
@@ -51,9 +64,11 @@ router.get('/list', auth.mustLogin, function (req, res) {
                 .exec();//开始真正执行查询，返回一个新promise
         }).then(function (docs) {//docs是当前页的文章列表
         //把markdown源文件转换成html格式的内容
-        docs.forEach(function (doc) {
-            doc.content = markdown.toHTML(doc.content);
-        });
+            docs.forEach(function (doc) {
+                if (doc.content){
+                    doc.content = markdown.toHTML(doc.content);
+                }
+            });
         //docs是所有的文章数组
         res.render('article/list', {
             title: '文章列表',
@@ -66,9 +81,9 @@ router.get('/list', auth.mustLogin, function (req, res) {
         });
     }).catch(function(err){
         req.flash('error', '显示文章列表失败' + err);
+        console.log(err.stack)
         res.redirect('back');
     });
-
 });
 
 //显示增加文章的表单路由
@@ -77,15 +92,22 @@ router.get('/add', auth.mustLogin, function (req, res) {
     res.render('article/add', {title: '新增文章', article: {}});
 });
 
-router.post('/add', auth.mustLogin, function (req, res) {
+router.post('/add', auth.mustLogin, upload.single("file"),function (req, res) {
     //从请求体中得到文档对象
     var article = req.body;
+    article.attach = '';
+
+    if (req.file){
+        article.attach = path.join(req.headers.host,"./uploads/"+req.file.filename);
+        article.attach = "http://"+article.attach;
+    }
     var articleId = article._id;
     if (articleId) {//如果ID有值表示修改文章
         Model('Article').update({_id: articleId}, {
             $set: {
                 title: article.title,//能且只能更新title和content两个字段
-                content: article.content//指定修改后的内容
+                content: article.content,//指定修改后的内容
+                attach:article.attach
             }
         }).then(function (result) {
             res.redirect('/article/detail/' + articleId);
@@ -107,7 +129,7 @@ router.post('/add', auth.mustLogin, function (req, res) {
                 res.redirect('back');
             } else {
                 req.flash('success', '文章发表成功');
-                res.redirect('/');
+                res.redirect('/article/list');
             }
         });
     }
@@ -135,7 +157,7 @@ router.get('/delete/:articleId', function (req, res) {
     //删除指定的文章
     Model('Article').remove({_id: articleId}).then(function (data) {
         req.flash('success', '删除文章成功');
-        res.redirect('/');
+        res.redirect('/article/list');
     }, function (error) {
         req.flash('error', '删除文章失败');
         res.redirect('back');

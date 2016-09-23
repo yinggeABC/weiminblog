@@ -14,11 +14,18 @@
         <div class="col-xs-6 input-group">
             <div class="input-group-addon"><span class="glyphicon glyphicon-list-alt"></span></div>
             <textarea class="form-control" name="content" id="content" cols="30" rows="10"><%=article.content%></textarea>
-        </div>
+            </div>
     </div>
-    <div class="form-group">
+    <div class="form-group">>
         <label class="control-label col-xs-3">上传图片</label>
-        <input type="file" id="file" name="file">
+        <div class="col-xs-5">
+            <%if (article.attach){%>
+            <div>
+                <img src=<%=article.attach%> class="img-responsive" alt="">
+            </div>
+            <%}%>
+            <input type="file" id="file" name="file">
+        </div>
     </div>
     <div class="col-xs-offset-3">
         <input class="btn btn-primary" type="submit" value="发表">

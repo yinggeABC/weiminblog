@@ -4,7 +4,14 @@
         <%=article.title%>
     </div>
     <div class="panel-body">
-        <%=article.content%>
+       <div>
+           <%=article.content%>
+       </div>
+           <%if (article.attach){%>
+        <div>
+            <img src="<%=article.attach%>" alt="<%=article.title%>" class="img-responsive">
+        </div>
+        <%}%>
     </div>
     <div class="panel-footer">
         <a href="/article/update/<%=article._id%>" class="btn btn-info">编辑</a>

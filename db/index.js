@@ -20,6 +20,7 @@ var UserModel = mongoose.model('User',UserSchema);
 //文章的模型骨架
 var ArticleSchema = new mongoose.Schema({
     title: String,  //标题
+    attach:String,//图片附件
     content: String, //正文
     pv:{
         type:Number,
