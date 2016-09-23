@@ -29,7 +29,7 @@ router.get('/list', auth.mustLogin, function (req, res) {
      *
      */
     var pageNum = parseInt(req.query.pageNum || 1); //当前的页码
-    var pageSize = parseInt(req.query.pageSize || 3);//每页的条数
+    var pageSize = parseInt(req.query.pageSize || 5);//每页的条数
     var order = req.query.order||'';
     //如果有用户ID的话查询此用户的所有的文章
     if (user)
@@ -81,7 +81,6 @@ router.get('/list', auth.mustLogin, function (req, res) {
         });
     }).catch(function(err){
         req.flash('error', '显示文章列表失败' + err);
-        console.log(err.stack)
         res.redirect('back');
     });
 });
