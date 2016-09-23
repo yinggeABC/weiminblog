@@ -105,11 +105,10 @@
 <script>
     $(function(){
         $(".datePicker").datepicker({
-            showYear:true,
-            showMonth:true,
+            changeYear:true,
+            changeMonth:true,
             showButtonPanel:true
         })
-        $(".datePicker").datepicker("option", $.datepicker.regional["zh-CN"]);
         //转到第几页
         function goto(pageNum) {
             //article/list?pageNum=<%=i%>&pageSize=<%=pageSize%>&keyword=<%=keyword%>
