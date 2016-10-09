@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>莺歌的博客</title>
-    <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.css">
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.css">
 
     <link rel="stylesheet" href="/lib/jquery-ui/themes/flick/jquery-ui.css">
     <script src="/lib/jquery/dist/jquery.js"></script>
@@ -58,17 +58,17 @@
 </nav>
 <div class="container">
     <%if(success){%>
-    <div class="alert alert-success alert-dismissable text-center" role="alert">
+    <div class="alert alert-success alert-dismissable text-center clsAlert" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-            ×
+            &times;
         </button>
         <%=success%>
     </div>
     <%}%>
 
     <%if(error){%>
-    <div class="alert alert-warning text-center" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
+    <div class="alert alert-warning text-center clsAlert" role="alert">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
         <%=error%></div>
     <%}%>
 </div>
