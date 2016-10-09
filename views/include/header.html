@@ -56,19 +56,19 @@
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
-<div class="container">
-    <%if(success){%>
-    <div class="alert alert-success alert-dismissable text-center clsAlert" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-            &times;
-        </button>
-        <%=success%>
-    </div>
-    <%}%>
+<div class="container" style="float:left;margin-left:12%;">
+            <%if(success){%>
+            <div class="alert alert-success alert-dismissable text-center clsAlert" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+                    &times;
+                </button>
+                <%=success%>
+            </div>
+            <%}%>
 
-    <%if(error){%>
-    <div class="alert alert-warning text-center clsAlert" role="alert">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <%=error%></div>
-    <%}%>
+            <%if(error){%>
+            <div class="alert alert-warning text-center clsAlert" role="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <%=error%></div>
+            <%}%>
 </div>
