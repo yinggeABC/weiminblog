@@ -6,7 +6,11 @@
                 上传头像
             </div>
             <div class="panel-body">
+
                 <div class="form-group">
+                    <div>
+                    <canvas id="head" style="height:200px;width:200px;border:1px solid #ccc;"></canvas>
+                </div>
                     <label for="avatar" class="control-label">从本地选择头像，建议图片不大于8KB</label>
                     <input type="file" id="avatar" class="form-control" name="avatar"/>
                 </div>
@@ -33,4 +37,11 @@
         </div>
     </form>
 </div>
+<script>
+    var canvas = document.getElementById("head")
+    var context = canvas.getContext("2d")
+    context.font = "bold 30px Arial"
+    context.fillStyle = "#ccc";
+    context.fillText("请上传头像",canvas.width/2-70,canvas.height/2+10)
+</script>
 <%include ../include/footer.html%>
