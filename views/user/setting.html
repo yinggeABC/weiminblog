@@ -9,8 +9,12 @@
 
                 <div class="form-group">
                     <div>
-                    <canvas id="head" style="height:200px;width:200px;border:1px solid #ccc;"></canvas>
-                </div>
+                        <div class="mark" id="mark"></div>
+                    <canvas id="head" style="border:1px solid #ccc;"></canvas>
+                    <canvas id="view"></canvas>
+                        <div><button type="button" class="cutImg">预览</button></div>
+                    </div>
+                    <br/>
                     <label for="avatar" class="control-label">从本地选择头像，建议图片不大于8KB</label>
                     <input type="file" id="avatar" class="form-control" name="avatar"/>
                 </div>
@@ -38,10 +42,93 @@
     </form>
 </div>
 <script>
-    var canvas = document.getElementById("head")
-    var context = canvas.getContext("2d")
-    context.font = "bold 30px Arial"
-    context.fillStyle = "#ccc";
-    context.fillText("请上传头像",canvas.width/2-70,canvas.height/2+10)
+    $(function(){
+        var mark = document.getElementById("mark");
+        var markW,markH;
+
+        //头像显示区域
+        var canvas = document.getElementById("head")
+        canvas.height=200;
+        canvas.width=200;
+        var context = canvas.getContext("2d")
+        context.font = "bold 30px Arial"
+        context.textAlign = "center";
+        context.textBaseline="middle";
+        context.fillStyle = "#ccc";
+        context.fillText("请上传头像",canvas.width/2,canvas.height/2);
+
+        //读取图片并且显示头像
+        $("#avatar").on("change",function(){
+            var file = this.files[0];
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function(e){
+                var img = new Image();
+                img.src = this.result;
+                img.onload = function(){
+                    context.clearRect(0,0,canvas.width,canvas.height);
+                    context.drawImage(this,0,0,canvas.width,canvas.height);
+
+                    //以下三个事件完成鼠标拖拽事件
+                    $(canvas).on("mouseenter",function(e){
+                        $(mark).addClass("show");
+                         markW = mark.offsetWidth;
+                         markH = mark.offsetHeight;
+                    })
+                    $(mark).on("mousedown",function(e){
+                        this.flag = true;
+                    })
+                    $(mark).on("mouseup",function(e){
+                        this.flag =false;
+                    })
+                    $(mark).on("mousemove",function(e){
+                        if (this.flag){
+                            var curLeft = e.pageX-$(this).outerWidth()/2;
+                            var curTop = e.pageY-$(this).outerHeight()/2;
+                            var canLeft = canvas.getBoundingClientRect().left;
+                            var canTop = canvas.getBoundingClientRect().top;
+                            curLeft = curLeft<=canLeft?canLeft:(curLeft>=(canLeft+canvas.offsetWidth-mark.offsetWidth)?(canLeft+canvas.offsetWidth-markW):curLeft);
+                            curTop = curTop<=canTop?canTop:(curTop>=(canTop+canvas.offsetHeight-mark.offsetHeight)?(canTop+canvas.offsetHeight-markH):curTop);
+                            $(this).offset({top:curTop,left:curLeft})
+                        }
+                    })
+
+                    //当点击“预览”按钮时，进行图片剪切
+                    $(".cutImg").on("click",function(){
+                        var vCanvas = document.getElementById("view")
+                        vCanvas.width=100;
+                        vCanvas.height=100;
+                        var vContext = vCanvas.getContext("2d")
+
+                        var dataURL = getDataURL();
+                        var cutImg = new Image();
+                        cutImg.src = dataURL;
+                        cutImg.onload = function(){
+                            vContext.drawImage(this,0,0,vCanvas.width,vCanvas.height);
+                        }
+
+                    })
+                }
+            }
+        })
+
+        function getDataURL(){
+
+            var sx = $(mark).offset().left-canvas.getBoundingClientRect().left;
+            var sy = $(mark).offset().top-canvas.getBoundingClientRect().top;
+            var getData = context.getImageData(sx,sy,markW,markH)
+            var tmpCanvas = document.createElement("canvas")
+            tmpCanvas.width = markW;
+            tmpCanvas.height = markH;
+            var tmpCxt = tmpCanvas.getContext("2d")
+            tmpCxt.putImageData(getData,0,0,0,0,markW,markH);
+            return tmpCanvas.toDataURL("image/png")
+        }
+    })
+
+
+
+
+
 </script>
 <%include ../include/footer.html%>
